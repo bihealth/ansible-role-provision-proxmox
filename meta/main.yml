@@ -24,5 +24,3 @@ galaxy_info:
         - stretch
   galaxy_tags:
     - redis
-
-dependencies: []

@@ -1,18 +1,19 @@
 ---
 
 - name: create container on proxmox host
-  proxmox:
+  local_action:
+    module: community.general.proxmox
     vmid: "{{ proxmox_vmid }}"
     node: "{{ proxmox_node }}"
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_host }}"
+    api_host: "{{ proxmox_api_host }}"
     password: "{{ proxmox_password_root }}"
     hostname: "{{ proxmox_hostname }}"
     ostemplate: "{{ proxmox_ostemplate }}"
     storage: "{{ proxmox_storage|default('local-zfs') }}"
     unprivileged: "{{ proxmox_enable_docker|default(false) }}"
-    onboot: "{{ proxmox_onboot|default(True) }}"
+    onboot: "{{ proxmox_onboot|default(true) }}"
     memory: "{{ proxmox_memory }}"
     disk: "{{ proxmox_disk }}"
     cores: "{{ proxmox_cores }}"
@@ -28,11 +29,12 @@
     - upgrade all packages to latest
 
 - name: start container
-  proxmox:
+  local_action:
+    module: community.general.proxmox
     vmid: "{{ proxmox_vmid }}"
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_host }}"
+    api_host: "{{ proxmox_api_host }}"
     state: started
     timeout: 90
 

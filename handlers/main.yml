@@ -1,9 +1,9 @@
 ---
 
 - name: enable and install sshd
-  delegate_to: "{{ proxmox_host }}"
+  delegate_to: "{{ proxmox_node }}"
   remote_user: root
-  shell: |
+  ansible.builtin.shell: |
     set -euo pipefail
     if [[ "{{ proxmox_container_custom_script | quote }}" != "''" ]]; then
       echo {{ proxmox_container_custom_script | quote }} | pct exec {{ proxmox_vmid }} /bin/bash
@@ -21,20 +21,20 @@
     executable: /bin/bash
 
 - name: enable features for Docker in container
-  delegate_to: "{{ proxmox_host }}"
-  command: "pct set {{ proxmox_vmid }} --features nesting=1,keyctl=1"
+  delegate_to: "{{ proxmox_node }}"
+  ansible.builtin.command: "pct set {{ proxmox_vmid }} --features nesting=1,keyctl=1,fuse=1"
   when: proxmox_enable_docker
   notify: restart container
 
 - name: restart container
-  proxmox:
+  local_action:
+    module: community.general.proxmox
     vmid: "{{ proxmox_vmid }}"
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
-    api_host: "{{ proxmox_host }}"
+    api_host: "{{ proxmox_api_host }}"
     state: restarted
     timeout: 90
-  # no_log: true  # secret passwords
 
 - name: wait for container to be up
   wait_for:

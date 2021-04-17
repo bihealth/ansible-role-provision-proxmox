@@ -2,9 +2,6 @@
 
 # REQUIRED Settings -------------------------------------------------------------------------------
 
-# REQUIRED: hostname running
-# proxmox_host:
-
 # REQUIRED: API user for connecting to host
 # proxmox_api_user:
 
